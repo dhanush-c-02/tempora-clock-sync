@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempora - Clock Synchronization System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            color: #4a5568;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #718096;
+        }
+
+        .grand-clock-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .grand-clock-time {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .clocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .clock-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .clock-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .clock-card.synchronized {
+            border-color: #48bb78;
+            background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%);
+        }
+
+        .clock-card.ahead {
+            border-color: #ed8936;
+            background: linear-gradient(135deg, #fffaf0 0%, #fef5e7 100%);
+        }
+
+        .clock-card.behind {
+            border-color: #e53e3e;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+        }
+
+        .clock-visual {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .clock-info {
+            text-align: center;
+        }
+
+        .clock-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2d3748;
+        }
+
+        .clock-time {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+
+        .clock-difference {
+            font-size: 1.1em;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .difference-synchronized {
+            background: #48bb78;
+            color: white;
+        }
+
+        .difference-ahead {
+            background: #ed8936;
+            color: white;
+        }
+
+        .difference-behind {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .summary {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .summary h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 1.1em;
+        }
+
+        .recommendations {
+            background: #edf2f7;
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .recommendations h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        .recommendation {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            font-size: 1.1em;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes clockTick {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(6deg); }
+        }
+
+        .clock-hand {
+            animation: clockTick 1s ease-in-out infinite alternate;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕰️ TEMPORA</h1>
+            <p>Clock Synchronization System</p>
+        </div>
+
+        <div class="grand-clock-section">
+            <h2>📍 Grand Clock Tower</h2>
+            <div class="grand-clock-time" id="grandClockTime">15:00</div>
+            <p>Reference Time</p>
+        </div>
+
+        <div class="clocks-grid" id="clocksGrid">
+            <!-- Clock cards will be generated here -->
+        </div>
+
+        <div class="summary" id="summarySection">
+            <h2>📊 Synchronization Summary</h2>
+            <div class="stats-grid" id="statsGrid">
+                <!-- Stats will be generated here -->
+            </div>
+        </div>
+
+        <div class="recommendations" id="recommendationsSection">
+            <h2>🔧 Synchronization Recommendations</h2>
+            <div id="recommendationsList">
+                <!-- Recommendations will be generated here -->
+            </div>
+        </div>
+
+        <button class="refresh-btn" onclick="updateClockData()">🔄 Refresh Clock Data</button>
+    </div>
+
+    <script>
+        // Clock Synchronization Logic
+        class WebClockSynchronizer {
+            constructor() {
+                this.grandClockTower = "15:00";
+                this.townClocks = [
+                    { id: 1, time: "14:45", name: "Town Square Clock", color: "#e53e3e" },
+                    { id: 2, time: "15:05", name: "Railway Station Clock", color: "#ed8936" },
+                    { id: 3, time: "15:00", name: "Church Bell Tower", color: "#48bb78" },
+                    { id: 4, time: "14:40", name: "Market Clock", color: "#e53e3e" }
+                ];
+            }
+
+            timeToMinutes(timeString) {
+                const [hours, minutes] = timeString.split(':').map(Number);
+                return hours * 60 + minutes;
+            }
+
+            calculateTimeDifferences() {
+                const grandClockMinutes = this.timeToMinutes(this.grandClockTower);
+                return this.townClocks.map(clock => {
+                    const clockMinutes = this.timeToMinutes(clock.time);
+                    return clockMinutes - grandClockMinutes;
+                });
+            }
+
+            analyzeClocks() {
+                const differences = this.calculateTimeDifferences();
+                return {
+                    grandClockTower: this.grandClockTower,
+                    clocks: this.townClocks.map((clock, index) => ({
+                        ...clock,
+                        difference: differences[index],
+                        status: differences[index] === 0 ? 'synchronized' : 
+                                differences[index] > 0 ? 'ahead' : 'behind',
+                        absoluteDifference: Math.abs(differences[index])
+                    })),
+                    summary: {
+                        totalClocks: this.townClocks.length,
+                        synchronized: differences.filter(diff => diff === 0).length,
+                        ahead: differences.filter(diff => diff > 0).length,
+                        behind: differences.filter(diff => diff < 0).length,
+                        maxDifference: Math.max(...differences.map(Math.abs)),
+                        averageDifference: differences.reduce((sum, diff) => sum + Math.abs(diff), 0) / differences.length
+                    }
+                };
+            }
+
+            generateRecommendations() {
+                const analysis = this.analyzeClocks();
+                return analysis.clocks.map(clock => {
+                    if (clock.difference === 0) {
+                        return `✅ ${clock.name}: Perfect synchronization - no adjustment needed`;
+                    } else if (clock.difference > 0) {
+                        return `⏰ ${clock.name}: Move backward by ${clock.absoluteDifference} minute${clock.absoluteDifference !== 1 ? 's' : ''}`;
+                    } else {
+                        return `⏰ ${clock.name}: Move forward by ${clock.absoluteDifference} minute${clock.absoluteDifference !== 1 ? 's' : ''}`;
+                    }
+                });
+            }
+        }
+
+        // Canvas Clock Drawing Function
+        function drawClock(canvas, time, status) {
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(centerX, centerY) - 10;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw clock face
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = status === 'synchronized' ? '#f0fff4' : 
+                           status === 'ahead' ? '#fffaf0' : '#fff5f5';
+            ctx.fill();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = status === 'synchronized' ? '#48bb78' : 
+                             status === 'ahead' ? '#ed8936' : '#e53e3e';
+            ctx.stroke();
+
+            // Draw hour markers
+            ctx.strokeStyle = '#2d3748';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 12; i++) {
+                const angle = (i * Math.PI) / 6;
+                const x1 = centerX + Math.cos(angle - Math.PI / 2) * (radius - 20);
+                const y1 = centerY + Math.sin(angle - Math.PI / 2) * (radius - 20);
+                const x2 = centerX + Math.cos(angle - Math.PI / 2) * (radius - 10);
+                const y2 = centerY + Math.sin(angle - Math.PI / 2) * (radius - 10);
+                
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+            }
+
+            // Parse time
+            const [hours, minutes] = time.split(':').map(Number);
+
+            // Draw hour hand
+            const hourAngle = ((hours % 12) + minutes / 60) * Math.PI / 6;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(
+                centerX + Math.cos(hourAngle - Math.PI / 2) * (radius * 0.5),
+                centerY + Math.sin(hourAngle - Math.PI / 2) * (radius * 0.5)
+            );
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#2d3748';
+            ctx.stroke();
+
+            // Draw minute hand
+            const minuteAngle = minutes * Math.PI / 30;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(
+                centerX + Math.cos(minuteAngle - Math.PI / 2) * (radius * 0.7),
+                centerY + Math.sin(minuteAngle - Math.PI / 2) * (radius * 0.7)
+            );
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Draw center dot
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#2d3748';
+            ctx.fill();
+        }
+
+        // Initialize and render the interface
+        function initializeInterface() {
+            const clockSync = new WebClockSynchronizer();
+            const analysis = clockSync.analyzeClocks();
+            const recommendations = clockSync.generateRecommendations();
+
+            // Update grand clock time
+            document.getElementById('grandClockTime').textContent = analysis.grandClockTower;
+
+            // Generate clock cards
+            const clocksGrid = document.getElementById('clocksGrid');
+            clocksGrid.innerHTML = '';
+
+            analysis.clocks.forEach(clock => {
+                const clockCard = document.createElement('div');
+                clockCard.className = `clock-card ${clock.status}`;
+                
+                const diffText = clock.difference === 0 ? 'Synchronized' :
+                               clock.difference > 0 ? `+${clock.difference} min ahead` : 
+                               `${clock.difference} min behind`;
+
+                clockCard.innerHTML = `
+                    <div class="clock-visual">
+                        <canvas width="150" height="150" id="clock-${clock.id}"></canvas>
+                    </div>
+                    <div class="clock-info">
+                        <div class="clock-name">${clock.name}</div>
+                        <div class="clock-time">${clock.time}</div>
+                        <div class="clock-difference difference-${clock.status}">
+                            ${diffText}
+                        </div>
+                    </div>
+                `;
+                
+                clocksGrid.appendChild(clockCard);
+
+                // Draw clock after adding to DOM
+                setTimeout(() => {
+                    const canvas = document.getElementById(`clock-${clock.id}`);
+                    if (canvas) {
+                        drawClock(canvas, clock.time, clock.status);
+                    }
+                }, 100);
+            });
+
+            // Generate summary stats
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${analysis.summary.totalClocks}</div>
+                    <div class="stat-label">Total Clocks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${analysis.summary.synchronized}</div>
+                    <div class="stat-label">Synchronized</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${analysis.summary.ahead}</div>
+                    <div class="stat-label">Running Ahead</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${analysis.summary.behind}</div>
+                    <div class="stat-label">Running Behind</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${analysis.summary.maxDifference}</div>
+                    <div class="stat-label">Max Difference (min)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${analysis.summary.averageDifference.toFixed(1)}</div>
+                    <div class="stat-label">Avg Difference (min)</div>
+                </div>
+            `;
+
+            // Generate recommendations
+            const recommendationsList = document.getElementById('recommendationsList');
+            recommendationsList.innerHTML = recommendations.map(rec => 
+                `<div class="recommendation">${rec}</div>`
+            ).join('');
+
+            console.log('Time Differences Array:', clockSync.calculateTimeDifferences());
+        }
+
+        // Function to simulate clock updates
+        function updateClockData() {
+            // Simulate random clock variations
+            const clockSync = new WebClockSynchronizer();
+            clockSync.townClocks.forEach(clock => {
+                const variation = Math.floor(Math.random() * 11) - 5; // -5 to +5 minutes
+                const [hours, minutes] = clock.time.split(':').map(Number);
+                const totalMinutes = hours * 60 + minutes + variation;
+                const newHours = Math.floor(totalMinutes / 60) % 24;
+                const newMinutes = totalMinutes % 60;
+                clock.time = `${newHours.toString().padStart(2, '0')}:${Math.abs(newMinutes).toString().padStart(2, '0')}`;
+            });
+            
+            initializeInterface();
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeInterface);
+    </script>
+</body>
+</html>

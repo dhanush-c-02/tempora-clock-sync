@@ -1,0 +1,34 @@
+{
+  "name": "tempora",
+  "version": "1.0.0",
+  "description": "A clock synchronization system that checks and synchronizes town clocks with the Grand Clock Tower",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node test.js",
+    "test-refactored": "node test-refactored.js",
+    "demo": "node app-refactored.js",
+    "interactive": "node interactive-input.js",
+    "config": "node config-input.js"
+  },
+  "keywords": [
+    "clock",
+    "synchronization",
+    "time",
+    "visualization",
+    "javascript",
+    "modular",
+    "maintainable"
+  ],
+  "author": "Hackathon Developer",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "moment-timezone": "^0.5.48",
+    "socket.io": "^4.8.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

@@ -1,0 +1,955 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Medieval Color Palette */
+    --medieval-gold: #d4af37;
+    --medieval-bronze: #cd7f32;
+    --medieval-copper: #b87333;
+    --medieval-stone: #8b7355;
+    --medieval-dark-stone: #5d4e37;
+    --medieval-wood: #8b4513;
+    --medieval-cream: #f5f5dc;
+    --medieval-shadow: rgba(139, 69, 19, 0.3);
+    
+    /* Clock Colors */
+    --clock-face: #f5f5dc;
+    --clock-roman: #8b4513;
+    --clock-hands: #2f1b14;
+    --clock-center: #cd7f32;
+    
+    /* Status Colors */
+    --synchronized: #228b22;
+    --ahead: #ff8c00;
+    --behind: #dc143c;
+    
+    /* Background */
+    --bg-primary: linear-gradient(135deg, #2c1810 0%, #4a3728 50%, #6b5745 100%);
+    --bg-secondary: rgba(139, 69, 19, 0.15);
+    --bg-card: rgba(245, 245, 220, 0.95);
+    --bg-card-hover: rgba(245, 245, 220, 0.98);
+    
+    /* Text */
+    --text-primary: #2f1b14;
+    --text-secondary: #5d4e37;
+    --text-light: #f5f5dc;
+    --text-gold: #d4af37;
+    
+    /* Shadows */
+    --shadow-medieval: 0 8px 32px rgba(139, 69, 19, 0.3);
+    --shadow-inset: inset 0 2px 4px rgba(139, 69, 19, 0.2);
+    --shadow-glow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+body {
+    font-family: 'Cinzel', 'Georgia', serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Medieval Background Pattern */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('medieval-bg.svg');
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    opacity: 0.4;
+    z-index: -1;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(139, 69, 19, 0.1) 100%);
+    z-index: -1;
+}
+
+/* App Container */
+.app-container {
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.9) 0%, rgba(139, 115, 85, 0.95) 100%);
+    border-bottom: 3px solid var(--medieval-gold);
+    box-shadow: var(--shadow-medieval);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.logo i {
+    font-size: 3rem;
+    color: var(--medieval-gold);
+    animation: clockTick 2s ease-in-out infinite;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes clockTick {
+    0%, 50%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(6deg); }
+    75% { transform: rotate(-6deg); }
+}
+
+.logo h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--medieval-gold);
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+    letter-spacing: 3px;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: var(--medieval-cream);
+    font-style: italic;
+    font-weight: 400;
+    margin-top: 0.5rem;
+}
+
+.current-time {
+    text-align: right;
+    background: var(--bg-card);
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 2px solid var(--medieval-gold);
+    box-shadow: var(--shadow-inset);
+}
+
+.time-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.time-display {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--medieval-copper);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.date-display {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+/* Main Content */
+.main-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+/* Card Styles */
+.card {
+    background: var(--bg-card);
+    border-radius: 20px;
+    border: 3px solid var(--medieval-bronze);
+    box-shadow: var(--shadow-medieval);
+    overflow: hidden;
+    transition: all 0.4s ease;
+    position: relative;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--medieval-gold), var(--medieval-copper), var(--medieval-gold));
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(139, 69, 19, 0.4);
+    background: var(--bg-card-hover);
+}
+
+.card-header {
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--medieval-stone) 0%, var(--medieval-dark-stone) 100%);
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 2px solid var(--medieval-gold);
+}
+
+.card-header i {
+    color: var(--medieval-gold);
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.card-header h2,
+.card-header h3 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Grand Clock Section */
+.grand-clock-section {
+    margin-bottom: 3rem;
+}
+
+.grand-clock-card {
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(245, 245, 220, 0.9) 100%);
+    border: 4px solid var(--medieval-gold);
+}
+
+.grand-clock-display {
+    padding: 4rem 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    background: radial-gradient(circle, rgba(245, 245, 220, 0.95) 0%, rgba(212, 175, 55, 0.1) 100%);
+}
+
+.sync-btn {
+    background: linear-gradient(135deg, var(--medieval-gold), var(--medieval-copper));
+    color: var(--text-primary);
+    border: 2px solid var(--medieval-bronze);
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-family: 'Cinzel', serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-left: auto;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-medieval);
+}
+
+.sync-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+    background: linear-gradient(135deg, #e6c158, #d4941f);
+}
+
+.sync-btn i {
+    transition: transform 0.4s ease;
+}
+
+.sync-btn:hover i {
+    transform: rotate(360deg);
+}
+
+/* Medieval Analog Clock */
+.analog-clock {
+    position: relative;
+    width: 280px;
+    height: 280px;
+}
+
+.clock-face {
+    width: 100%;
+    height: 100%;
+    border: 8px solid var(--medieval-bronze);
+    border-radius: 50%;
+    position: relative;
+    background: radial-gradient(circle, var(--clock-face) 0%, #e6e6d4 70%, var(--medieval-stone) 100%);
+    box-shadow: 
+        inset 0 0 30px rgba(139, 69, 19, 0.3),
+        0 0 30px rgba(212, 175, 55, 0.5),
+        0 0 50px rgba(139, 69, 19, 0.2);
+}
+
+.clock-face::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 3px solid var(--medieval-gold);
+    border-radius: 50%;
+    background: linear-gradient(45deg, transparent 45%, rgba(212, 175, 55, 0.1) 55%);
+}
+
+.clock-numbers {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.number {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    color: var(--clock-roman);
+    font-size: 1.1rem;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    transform: translate(-50%, -50%) rotate(calc(var(--i) * 30deg)) translateY(-110px) rotate(calc(var(--i) * -30deg));
+    text-shadow: 1px 1px 2px rgba(139, 69, 19, 0.3);
+}
+
+.hour-hand, .minute-hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom center;
+    border-radius: 10px;
+    transition: transform 0.8s ease;
+}
+
+.hour-hand {
+    width: 6px;
+    height: 80px;
+    margin-left: -3px;
+    background: linear-gradient(to top, var(--clock-hands), var(--medieval-bronze));
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.minute-hand {
+    width: 4px;
+    height: 110px;
+    margin-left: -2px;
+    background: linear-gradient(to top, var(--clock-hands), var(--medieval-copper));
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.center-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    background: radial-gradient(circle, var(--clock-center), var(--medieval-bronze));
+    border: 2px solid var(--medieval-gold);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+}
+
+.digital-time {
+    font-family: 'Cinzel', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--medieval-copper);
+    text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.5);
+    background: var(--bg-card);
+    padding: 1rem 2rem;
+    border-radius: 15px;
+    border: 3px solid var(--medieval-gold);
+    box-shadow: var(--shadow-inset);
+}
+
+/* Statistics Section */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border-radius: 15px;
+    padding: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    border: 3px solid var(--medieval-bronze);
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: var(--shadow-medieval);
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--medieval-gold), var(--medieval-copper));
+    border-radius: 15px 15px 0 0;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(139, 69, 19, 0.3);
+}
+
+.stat-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--text-light);
+    border: 2px solid var(--medieval-gold);
+    box-shadow: var(--shadow-inset);
+}
+
+.stat-icon.synchronized {
+    background: linear-gradient(135deg, var(--synchronized), #32cd32);
+}
+
+.stat-icon.ahead {
+    background: linear-gradient(135deg, var(--ahead), #ffa500);
+}
+
+.stat-icon.behind {
+    background: linear-gradient(135deg, var(--behind), #ff6347);
+}
+
+.stat-icon.difference {
+    background: linear-gradient(135deg, var(--medieval-bronze), var(--medieval-copper));
+}
+
+.stat-number {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--medieval-copper);
+    text-shadow: 1px 1px 2px rgba(139, 69, 19, 0.3);
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-family: 'Cinzel', serif;
+}
+
+/* Section Headers */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 3px solid var(--medieval-gold);
+}
+
+.section-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 2rem;
+    color: var(--text-light);
+    font-family: 'Cinzel', serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.section-header i {
+    color: var(--medieval-gold);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.add-clock-btn {
+    background: linear-gradient(135deg, var(--medieval-copper), var(--medieval-bronze));
+    color: var(--text-light);
+    border: 2px solid var(--medieval-gold);
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-family: 'Cinzel', serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: var(--shadow-medieval);
+}
+
+.add-clock-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+    background: linear-gradient(135deg, #d4941f, #b87333);
+}
+
+/* Clock Cards */
+.clocks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+.clock-card {
+    background: var(--bg-card);
+    border-radius: 15px;
+    border: 3px solid var(--medieval-bronze);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-medieval);
+}
+
+.clock-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(139, 69, 19, 0.3);
+}
+
+.clock-header {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--medieval-stone), var(--medieval-dark-stone));
+    color: var(--text-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.clock-name {
+    font-weight: 600;
+    font-family: 'Cinzel', serif;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.clock-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.clock-btn {
+    background: var(--medieval-bronze);
+    border: 1px solid var(--medieval-gold);
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.clock-btn:hover {
+    background: var(--medieval-gold);
+    color: var(--text-primary);
+    transform: scale(1.1);
+}
+
+.clock-content {
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.clock-time {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--medieval-copper);
+    text-shadow: 1px 1px 2px rgba(139, 69, 19, 0.3);
+}
+
+.clock-status {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: 'Cinzel', serif;
+}
+
+.status-synchronized { color: var(--synchronized); }
+.status-ahead { color: var(--ahead); }
+.status-behind { color: var(--behind); }
+
+.difference-badge {
+    background: var(--medieval-stone);
+    color: var(--text-light);
+    padding: 0.25rem 0.75rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-left: 0.5rem;
+    border: 1px solid var(--medieval-gold);
+}
+
+/* Charts Section */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 2rem;
+}
+
+.chart-card {
+    min-height: 450px;
+}
+
+.chart-container {
+    padding: 2rem;
+    height: 400px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(47, 27, 20, 0.9);
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+}
+
+.modal-content {
+    background: var(--bg-card);
+    border-radius: 20px;
+    max-width: 500px;
+    margin: 10% auto;
+    border: 4px solid var(--medieval-gold);
+    box-shadow: var(--shadow-medieval);
+    animation: modalSlideIn 0.4s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--medieval-stone), var(--medieval-dark-stone));
+    color: var(--text-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 15px 15px 0 0;
+}
+
+.modal-header h3 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.close {
+    color: var(--medieval-gold);
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close:hover {
+    color: var(--text-light);
+    transform: scale(1.2);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-family: 'Cinzel', serif;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--medieval-bronze);
+    border-radius: 10px;
+    background: rgba(245, 245, 220, 0.9);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: 'Cinzel', serif;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--medieval-gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+
+.modal-footer {
+    padding: 2rem;
+    background: var(--medieval-stone);
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    border-radius: 0 0 15px 15px;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-family: 'Cinzel', serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--medieval-gold), var(--medieval-copper));
+    color: var(--text-primary);
+    border-color: var(--medieval-bronze);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+}
+
+.btn-secondary {
+    background: var(--medieval-stone);
+    color: var(--text-light);
+    border-color: var(--medieval-gold);
+}
+
+.btn-secondary:hover {
+    background: var(--medieval-dark-stone);
+    transform: translateY(-1px);
+}
+
+/* Simple Differences Display */
+.simple-differences {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.difference-bar {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border-left: 4px solid var(--medieval-gold);
+    transition: all 0.3s ease;
+}
+
+.difference-bar:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.difference-bar.behind {
+    border-left-color: var(--behind);
+}
+
+.difference-bar.ahead {
+    border-left-color: var(--ahead);
+}
+
+.difference-bar.synchronized {
+    border-left-color: var(--synchronized);
+}
+
+.difference-bar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.difference-clock-name {
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.difference-value {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+}
+
+.difference-value.positive {
+    color: var(--ahead);
+}
+
+.difference-value.negative {
+    color: var(--behind);
+}
+
+.difference-value.zero {
+    color: var(--synchronized);
+}
+
+.difference-visual {
+    width: 200px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin-left: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.difference-progress {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.difference-progress.behind {
+    background: var(--behind);
+}
+
+.difference-progress.ahead {
+    background: var(--ahead);
+}
+
+.difference-progress.synchronized {
+    background: var(--synchronized);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+    }
+
+    .main-content {
+        padding: 1.5rem;
+    }
+
+    .stats-grid,
+    .clocks-grid,
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        margin: 20% 1rem;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .analog-clock {
+        width: 220px;
+        height: 220px;
+    }
+
+    .digital-time {
+        font-size: 2rem;
+    }
+}
+
+/* Loading Animation */
+.loading {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--medieval-bronze);
+    border-radius: 50%;
+    border-top-color: var(--medieval-gold);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Pulse Animation for Live Updates */
+.pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .7;
+    }
+}
+
+/* Medieval Scroll Effects */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--medieval-dark-stone);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--medieval-gold), var(--medieval-copper));
+    border-radius: 6px;
+    border: 2px solid var(--medieval-dark-stone);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #e6c158, #d4941f);
+}

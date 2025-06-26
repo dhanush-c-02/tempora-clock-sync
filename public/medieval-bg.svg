@@ -1,0 +1,39 @@
+data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <defs>
+    <pattern id="clocktower" patternUnits="userSpaceOnUse" width="200" height="200">
+      <!-- Medieval stone texture -->
+      <rect width="200" height="200" fill="%23f5f5dc" opacity="0.1"/>
+      
+      <!-- Clock tower silhouette -->
+      <g opacity="0.05">
+        <!-- Tower base -->
+        <rect x="80" y="120" width="40" height="80" fill="%238b4513"/>
+        
+        <!-- Clock face -->
+        <circle cx="100" cy="100" r="30" fill="none" stroke="%238b4513" stroke-width="2"/>
+        
+        <!-- Clock hands -->
+        <line x1="100" y1="100" x2="100" y2="80" stroke="%238b4513" stroke-width="2"/>
+        <line x1="100" y1="100" x2="115" y2="105" stroke="%238b4513" stroke-width="1"/>
+        
+        <!-- Tower top -->
+        <polygon points="70,80 100,50 130,80" fill="%238b4513"/>
+        
+        <!-- Decorative elements -->
+        <rect x="75" y="140" width="5" height="10" fill="%238b4513"/>
+        <rect x="85" y="140" width="5" height="10" fill="%238b4513"/>
+        <rect x="110" y="140" width="5" height="10" fill="%238b4513"/>
+        <rect x="120" y="140" width="5" height="10" fill="%238b4513"/>
+      </g>
+      
+      <!-- Subtle medieval pattern -->
+      <g opacity="0.03">
+        <circle cx="50" cy="50" r="2" fill="%23d4af37"/>
+        <circle cx="150" cy="50" r="2" fill="%23d4af37"/>
+        <circle cx="50" cy="150" r="2" fill="%23d4af37"/>
+        <circle cx="150" cy="150" r="2" fill="%23d4af37"/>
+      </g>
+    </pattern>
+  </defs>
+  <rect width="200" height="200" fill="url(%23clocktower)"/>
+</svg>
