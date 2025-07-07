@@ -365,8 +365,8 @@ class DisplayFormatter {
     }
 }
 
-// Main ClockSynchronizer Class (Refactored)
-class ClockSynchronizerRefactored {
+// Main ClockSynchronizer Class
+class ClockSynchronizer {
     constructor(config = {}) {
         // Default configuration
         this.grandClockTower = config.grandClockTower || "15:00";
@@ -501,28 +501,23 @@ class ClockSynchronizerRefactored {
         this.lastAnalysis = null;
     }
 
-    // Legacy compatibility methods
-    timeToMinutes(timeString) {
-        console.warn('timeToMinutes is deprecated. Functionality moved to utils.');
-        return timeToMinutes(timeString);
-    }
 
-    minutesToTime(minutes) {
-        console.warn('minutesToTime is deprecated. Functionality moved to utils.');
-        return minutesToTime(minutes);
+    syncToCurrentTime() {
+        // Get current IST time in HH:MM format
+        const now = new Date();
+        const istOffset = 5.5 * 60 * 60 * 1000;
+        const ist = new Date(now.getTime() + istOffset);
+        const hours = ist.getUTCHours().toString().padStart(2, '0');
+        const minutes = ist.getUTCMinutes().toString().padStart(2, '0');
+        this.setGrandClockTowerTime(`${hours}:${minutes}`);
     }
 }
 
-// For backward compatibility, also export the original interface
-class ClockSynchronizer extends ClockSynchronizerRefactored {}
-
-// Create instance for backward compatibility
 const clockSync = new ClockSynchronizer();
 
 // Export classes and utilities
 module.exports = { 
     ClockSynchronizer,
-    ClockSynchronizerRefactored,
     Clock,
     SynchronizationAnalyzer,
     DisplayFormatter,
@@ -533,6 +528,6 @@ module.exports = {
 
 // Run analysis if this file is executed directly
 if (require.main === module) {
-    console.log('Starting Tempora Clock Synchronization System (Refactored Version)...\n');
+    console.log('Starting Tempora Clock Synchronization System...\n');
     clockSync.displayResults();
 }
