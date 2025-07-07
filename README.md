@@ -53,12 +53,9 @@ Tempora checks all the clocks in a town and synchronizes them with the Grand Clo
    npm install
    ```
 
+
 3. **Run the application**
    ```bash
-   # Original version
-   npm start
-   
-   # Enhanced refactored version (recommended)
    npm run demo
    ```
 
@@ -67,18 +64,14 @@ Tempora checks all the clocks in a town and synchronizes them with the Grand Clo
 
 ### Alternative Commands
 ```bash
-# Run original tests
-npm test
-
-# Run enhanced tests with refactored version
+# Run enhanced tests
 npm run test-refactored
 
 # Development mode
 npm run dev
 
 # Direct execution of core logic
-node app.js                    # Original version
-node app-refactored.js        # Enhanced version
+node app-refactored.js
 ```
 
 ## 🔄 Code Quality Improvements
@@ -102,29 +95,23 @@ This project includes a **comprehensively refactored version** (`app-refactored.
 
 See [`IMPROVEMENTS.md`](./IMPROVEMENTS.md) for detailed information about the refactoring improvements.
 
-### Running Both Versions:
-```bash
-# Original implementation
-node app.js
-npm test
 
-# Enhanced refactored version  
+### Running the Refactored Version:
+```bash
 node app-refactored.js
 npm run test-refactored
 ```
 
-Both versions are **100% backward compatible** and produce the same core results while the refactored version offers enhanced features and better maintainability.
+The refactored version offers enhanced features, better maintainability, and improved performance.
 
 ## 📁 Project Structure
 
 ```
 tempora/
-├── app.js                     # Core clock synchronization logic (original)
-├── app-refactored.js         # Enhanced, refactored version with improvements
+├── app-refactored.js         # Refactored version with improvements
 ├── index.html                # Web interface with visual elements
 ├── server.js                 # Express server
-├── test.js                   # Original test suite
-├── test-refactored.js        # Enhanced test suite for refactored version
+├── test-refactored.js        # Test suite for refactored version
 ├── package.json              # Project configuration
 ├── README.md                 # This file
 ├── IMPROVEMENTS.md           # Detailed refactoring documentation
@@ -142,8 +129,10 @@ tempora/
 
 ## 🔧 Core Components
 
+
 ### ClockSynchronizer Class
 ```javascript
+const { ClockSynchronizer } = require('./app-refactored.js');
 const clockSync = new ClockSynchronizer();
 const differences = clockSync.calculateTimeDifferences();
 // Returns: [-15, 5, 0, -20]
@@ -200,9 +189,10 @@ The project includes comprehensive tests covering:
 - Recommendation generation
 - Edge cases (midnight, late evening)
 
+
 Run tests with:
 ```bash
-npm test
+npm run test-refactored
 ```
 
 ## 🔄 API Endpoints
