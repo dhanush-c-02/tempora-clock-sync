@@ -5,8 +5,8 @@
  * with better separation of concerns, error handling, and maintainability.
  */
 
-// Import modules using require for Node.js compatibility
-const path = require('path');
+// Import modules using ESM for Node.js compatibility
+import path from 'path';
 
 // Helper functions that were moved to utils
 function validateTimeFormat(timeString) {
@@ -393,22 +393,33 @@ class ClockSynchronizer {
         this.lastAnalysis = null;
     }
 
+
     addClock(clockData) {
+        // Prevent duplicate clock IDs
+        if (this.clocks.some(clock => clock.id === clockData.id)) {
+            throw new Error(`Clock with ID ${clockData.id} already exists.`);
+        }
         const clock = new Clock(clockData);
         this.clocks.push(clock);
         this.lastAnalysis = null;
         return clock;
     }
 
+
     removeClock(clockId) {
-        const initialLength = this.clocks.length;
-        this.clocks = this.clocks.filter(clock => clock.id !== clockId);
-        
-        if (this.clocks.length < initialLength) {
+        const idx = this.clocks.findIndex(clock => clock.id === clockId);
+        if (idx !== -1) {
+            this.clocks.splice(idx, 1);
             this.lastAnalysis = null;
-            return true;
+            return { success: true, id: clockId };
+        } else {
+            return { success: false, error: 'Clock not found', id: clockId };
         }
-        return false;
+    }
+
+    // For backward compatibility with tests
+    deleteClock(id) {
+        return this.removeClock(id);
     }
 
     updateClockTime(clockId, newTime) {
@@ -515,8 +526,9 @@ class ClockSynchronizer {
 
 const clockSync = new ClockSynchronizer();
 
-// Export classes and utilities
-module.exports = { 
+
+// Export classes and utilities (ESM)
+export {
     ClockSynchronizer,
     Clock,
     SynchronizationAnalyzer,
@@ -526,8 +538,9 @@ module.exports = {
     validateTimeFormat
 };
 
-// Run analysis if this file is executed directly
-if (require.main === module) {
+
+// Run analysis if this file is executed directly (ESM compatible)
+if (import.meta.url === process.argv[1] || import.meta.url === `file://${process.argv[1]}`) {
     console.log('Starting Tempora Clock Synchronization System...\n');
     clockSync.displayResults();
 }

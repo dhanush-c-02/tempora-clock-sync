@@ -42,6 +42,13 @@ class TemporaUI {
             this.updateCurrentTime(data);
         });
 
+        this.socket.on('deleteClockResult', (result) => {
+            if (!result.success) {
+                alert('Failed to delete clock: ' + (result.error || 'Unknown error'));
+            }
+            // Optionally, show a success message or update UI here
+        });
+
         // UI Events
         document.getElementById('syncButton').addEventListener('click', () => {
             this.syncToIST();

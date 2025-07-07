@@ -46,7 +46,7 @@ app.post('/api/clocks', (req, res) => {
     }
     
     // Generate new ID
-    const newId = Math.max(...clockSync.townClocks.map(c => c.id)) + 1;
+    const newId = clockSync.clocks.length > 0 ? Math.max(...clockSync.clocks.map(c => c.id)) + 1 : 1;
     
     clockSync.addClock({
         id: newId,
@@ -70,7 +70,7 @@ app.put('/api/clocks/:id', (req, res) => {
         return res.status(400).json({ error: 'Name and time are required' });
     }
     
-    const clock = clockSync.townClocks.find(c => c.id === clockId);
+    const clock = clockSync.clocks.find(c => c.id === clockId);
     if (!clock) {
         return res.status(404).json({ error: 'Clock not found' });
     }
@@ -89,12 +89,12 @@ app.put('/api/clocks/:id', (req, res) => {
 app.delete('/api/clocks/:id', (req, res) => {
     const clockId = parseInt(req.params.id);
     
-    const clockIndex = clockSync.townClocks.findIndex(c => c.id === clockId);
+    const clockIndex = clockSync.clocks.findIndex(c => c.id === clockId);
     if (clockIndex === -1) {
         return res.status(404).json({ error: 'Clock not found' });
     }
     
-    clockSync.townClocks.splice(clockIndex, 1);
+    clockSync.clocks.splice(clockIndex, 1);
     
     const analysis = clockSync.analyzeClocks();
     
@@ -126,28 +126,35 @@ io.on('connection', (socket) => {
     
     socket.on('addClock', (data) => {
         const { name, time } = data;
-        
-        if (name && time) {
-            // Generate new ID
-            const newId = clockSync.townClocks.length > 0 
-                ? Math.max(...clockSync.townClocks.map(c => c.id)) + 1 
-                : 1;
-            
-            clockSync.addClock({
+        if (!name || !time) {
+            socket.emit('addClockResult', { success: false, error: 'Name and time are required.' });
+            return;
+        }
+        // Generate new ID
+        let newId = 1;
+        if (clockSync.clocks.length > 0) {
+            // Avoid duplicate IDs
+            const ids = clockSync.clocks.map(c => c.id);
+            newId = Math.max(...ids) + 1;
+        }
+        try {
+            const newClock = clockSync.addClock({
                 id: newId,
                 name: name.includes('Clock') ? name : name + ' Clock',
                 time: time
             });
-            
             const analysis = clockSync.analyzeClocks();
             io.emit('clockData', analysis);
+            socket.emit('addClockResult', { success: true, clock: newClock });
+        } catch (err) {
+            socket.emit('addClockResult', { success: false, error: err.message });
         }
     });
     
     socket.on('updateClock', (data) => {
         const { id, name, time } = data;
         
-        const clock = clockSync.townClocks.find(c => c.id === id);
+        const clock = clockSync.clocks.find(c => c.id === id);
         if (clock && name && time) {
             clock.name = name.includes('Clock') ? name : name + ' Clock';
             clock.time = time;
@@ -158,12 +165,16 @@ io.on('connection', (socket) => {
     });
     
     socket.on('deleteClock', (clockId) => {
-        const clockIndex = clockSync.townClocks.findIndex(c => c.id === clockId);
+        // Ensure clockId is a number for comparison
+        const id = typeof clockId === 'string' ? parseInt(clockId, 10) : clockId;
+        const clockIndex = clockSync.clocks.findIndex(c => c.id === id);
         if (clockIndex !== -1) {
-            clockSync.townClocks.splice(clockIndex, 1);
-            
+            clockSync.clocks.splice(clockIndex, 1);
             const analysis = clockSync.analyzeClocks();
             io.emit('clockData', analysis);
+            socket.emit('deleteClockResult', { success: true, id });
+        } else {
+            socket.emit('deleteClockResult', { success: false, error: 'Clock not found', id });
         }
     });
     

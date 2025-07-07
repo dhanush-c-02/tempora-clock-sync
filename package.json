@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "tempora",
   "version": "1.0.0",
   "description": "A clock synchronization system that checks and synchronizes town clocks with the Grand Clock Tower",
