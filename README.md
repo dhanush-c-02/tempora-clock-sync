@@ -65,18 +65,16 @@ Tempora checks all the clocks in a town and synchronizes them with the Grand Clo
 ### Alternative Commands
 ```bash
 # Run enhanced tests
-npm run test-refactored
+npm run test
 
 # Development mode
 npm run dev
 
 # Direct execution of core logic
-node app-refactored.js
+node app.js
 ```
 
 ## 🔄 Code Quality Improvements
-
-This project includes a **comprehensively refactored version** (`app-refactored.js`) that demonstrates significant improvements in:
 
 - ✅ **Modularity** - Separated concerns into focused classes and utilities
 - ✅ **Error Handling** - Comprehensive validation and descriptive error messages
@@ -85,36 +83,26 @@ This project includes a **comprehensively refactored version** (`app-refactored.
 - ✅ **Maintainability** - Clear documentation and extensible architecture
 - ✅ **Features** - Advanced statistics, insights, and configuration management
 
-### Key Enhancements:
-- **Statistical Analysis**: Median calculations, synchronization rates, drift analysis
-- **System Insights**: Intelligent recommendations based on analysis
-- **Clock Management**: Add, remove, and update clocks dynamically
-- **Configuration**: Import/export system configurations
-- **Performance**: Analysis caching and history tracking
-- **Error Handling**: Comprehensive validation with descriptive messages
+**Key Enhancements:**
+- Statistical analysis: Median calculations, synchronization rates, drift analysis
+- System insights: Intelligent recommendations based on analysis
+- Clock management: Add, remove, and update clocks dynamically
+- Configuration: Import/export system configurations
+- Performance: Analysis caching and history tracking
+- Error handling: Comprehensive validation with descriptive messages
 
-See [`IMPROVEMENTS.md`](./IMPROVEMENTS.md) for detailed information about the refactoring improvements.
-
-
-### Running the Refactored Version:
-```bash
-node app-refactored.js
-npm run test-refactored
-```
-
-The refactored version offers enhanced features, better maintainability, and improved performance.
 
 ## 📁 Project Structure
 
 ```
 tempora/
-├── app-refactored.js         # Refactored version with improvements
+├── app.js         # Main (latest) version with improvements
 ├── index.html                # Web interface with visual elements
 ├── server.js                 # Express server
-├── test-refactored.js        # Test suite for refactored version
+├── test.js        # Test suite for latest version
 ├── package.json              # Project configuration
 ├── README.md                 # This file
-├── IMPROVEMENTS.md           # Detailed refactoring documentation
+documentation
 └── src/                      # Modular source code (ES6 modules)
     ├── config/
     │   └── constants.js      # Configuration constants and validation rules
@@ -192,7 +180,7 @@ The project includes comprehensive tests covering:
 
 Run tests with:
 ```bash
-npm run test-refactored
+npm run test
 ```
 
 ## 🔄 API Endpoints
