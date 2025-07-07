@@ -92,27 +92,38 @@ node app.js
 - Error handling: Comprehensive validation with descriptive messages
 
 
+documentation
+
 ## 📁 Project Structure
 
 ```
 tempora/
-├── app.js         # Main (latest) version with improvements
-├── index.html                # Web interface with visual elements
-├── server.js                 # Express server
-├── test.js        # Test suite for latest version
-├── package.json              # Project configuration
-├── README.md                 # This file
-documentation
-└── src/                      # Modular source code (ES6 modules)
+├── app.js                # Main logic (ClockSynchronizer, etc.)
+├── server.js             # Express/Socket.IO server (entry point)
+├── package.json          # Project configuration
+├── README.md             # Main documentation
+├── INPUT-GUIDE.md        # Input & customization guide
+├── config.json           # (Optional) JSON config for clocks
+├── public/               # Static web assets (index.html, styles, etc.)
+├── routes/
+│   └── clocks.js         # REST API handlers (modular)
+├── sockets/
+│   └── clocks.js         # Socket.IO event handlers (modular)
+├── utils/
+│   ├── validation.js     # Input validation helpers
+│   └── logger.js         # Logging utility
+├── constants.js          # Centralized error/status constants
+├── test.js               # Test suite for latest version
+└── src/                  # (Legacy) Modular source code (ES6 modules)
     ├── config/
-    │   └── constants.js      # Configuration constants and validation rules
+    │   └── constants.js  # (Legacy) Config constants
     ├── models/
-    │   └── Clock.js          # Object-oriented Clock model
+    │   └── Clock.js      # (Legacy) Clock model
     ├── services/
-    │   ├── SynchronizationAnalyzer.js  # Advanced statistical analysis
-    │   └── DisplayFormatter.js         # Output formatting service
+    │   ├── SynchronizationAnalyzer.js
+    │   └── DisplayFormatter.js
     └── utils/
-        └── timeUtils.js      # Time utility functions and validation
+        └── timeUtils.js  # (Legacy) Time utilities
 ```
 
 ## 🔧 Core Components
@@ -199,27 +210,28 @@ Returns complete clock analysis data:
 }
 ```
 
-## 🎨 Customization
 
-### Adding New Clocks
-Modify the `townClocks` array in `app.js`:
-```javascript
-this.townClocks = [
-    { id: 5, time: "14:55", name: "Library Clock" },
-    // ... existing clocks
-];
-```
+## 🎨 Input & Customization Guide
 
-### Changing Reference Time
-Update the `grandClockTower` property:
-```javascript
-this.grandClockTower = "16:30"; // New reference time
-```
+See [`INPUT-GUIDE.md`](./INPUT-GUIDE.md) for a comprehensive guide to all supported input methods:
+
+- **Direct code editing** (change defaults in `app.js`)
+- **Constructor parameters** (pass clocks and reference time)
+- **Dynamic updates** (add/update clocks at runtime)
+- **JSON configuration file** (`config.json` + `npm run config`)
+- **Command line arguments** (for `interactive-input.js`)
+- **Interactive mode** (run and use commands in terminal)
+
+The guide also covers:
+- Input format rules (time, ID, name)
+- Common issues & solutions
+- Quick code examples
+- All available commands for running and customizing Tempora
 
 ### Styling Modifications
 Edit the CSS in `index.html` to customize:
 - Color schemes
-- Layout arrangements  
+- Layout arrangements
 - Animation effects
 - Typography choices
 
