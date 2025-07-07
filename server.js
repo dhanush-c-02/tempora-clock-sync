@@ -1,12 +1,16 @@
-const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
-const path = require('path');
-const { ClockSynchronizer } = require('./app.js');
+import express from 'express';
+import http from 'http';
+import { Server as socketIo } from 'socket.io';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { ClockSynchronizer } from './app.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = new socketIo(server);
 
 const PORT = process.env.PORT || 3000;
 
@@ -87,20 +91,24 @@ app.put('/api/clocks/:id', (req, res) => {
 });
 
 app.delete('/api/clocks/:id', (req, res) => {
-    const clockId = parseInt(req.params.id);
-    
-    const clockIndex = clockSync.clocks.findIndex(c => c.id === clockId);
-    if (clockIndex === -1) {
-        return res.status(404).json({ error: 'Clock not found' });
+    const clockId = Number(req.params.id);
+    if (isNaN(clockId)) {
+        return res.status(400).json({ error: 'Invalid clock ID' });
     }
-    
-    clockSync.clocks.splice(clockIndex, 1);
-    
+    const result = clockSync.deleteClock ? clockSync.deleteClock(clockId) : (function() {
+        const idx = clockSync.clocks.findIndex(c => c.id === clockId);
+        if (idx !== -1) {
+            clockSync.clocks.splice(idx, 1);
+            return { success: true, id: clockId };
+        } else {
+            return { success: false, error: 'Clock not found', id: clockId };
+        }
+    })();
+    if (!result.success) {
+        return res.status(404).json({ error: 'Clock not found', id: clockId });
+    }
     const analysis = clockSync.analyzeClocks();
-    
-    // Broadcast update to all connected clients
     io.emit('clockData', analysis);
-    
     res.json({ success: true, analysis });
 });
 
@@ -166,15 +174,26 @@ io.on('connection', (socket) => {
     
     socket.on('deleteClock', (clockId) => {
         // Ensure clockId is a number for comparison
-        const id = typeof clockId === 'string' ? parseInt(clockId, 10) : clockId;
-        const clockIndex = clockSync.clocks.findIndex(c => c.id === id);
-        if (clockIndex !== -1) {
-            clockSync.clocks.splice(clockIndex, 1);
+        const id = Number(clockId);
+        if (isNaN(id)) {
+            socket.emit('deleteClockResult', { success: false, error: 'Invalid clock ID', id: clockId });
+            return;
+        }
+        const result = clockSync.deleteClock ? clockSync.deleteClock(id) : (function() {
+            const idx = clockSync.clocks.findIndex(c => c.id === id);
+            if (idx !== -1) {
+                clockSync.clocks.splice(idx, 1);
+                return { success: true, id };
+            } else {
+                return { success: false, error: 'Clock not found', id };
+            }
+        })();
+        if (result.success) {
             const analysis = clockSync.analyzeClocks();
             io.emit('clockData', analysis);
             socket.emit('deleteClockResult', { success: true, id });
         } else {
-            socket.emit('deleteClockResult', { success: false, error: 'Clock not found', id });
+            socket.emit('deleteClockResult', { success: false, error: result.error, id });
         }
     });
     
@@ -214,4 +233,4 @@ setInterval(() => {
     }
 }, 60000); // Update every minute
 
-module.exports = { app, server, io };
+export { app, server, io };
